@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WhatsApp 模板转化玩法视觉手册</title>
+  <style>
+    :root {
+      --ink: #17201b;
+      --muted: #64706a;
+      --line: #dbe5df;
+      --paper: #fbfcfb;
+      --panel: #ffffff;
+      --soft: #edf7f1;
+      --soft-2: #eef3fb;
+      --accent: #128c7e;
+      --accent-2: #1d6ff2;
+      --warn: #b85c14;
+      --shadow: 0 18px 46px rgba(22, 40, 30, .12);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: Arial, "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--ink); background: var(--paper); line-height: 1.55; }
+    a { color: var(--accent-2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .page { min-height: 100vh; }
+    .topbar { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(16px); background: rgba(251,252,251,.88); border-bottom: 1px solid var(--line); }
+    .editor-bar { position: sticky; top: 57px; z-index: 19; display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; padding:8px 20px; background:#fff; border-bottom:1px solid var(--line); box-shadow:0 2px 10px rgba(22,40,30,.05); }.editor-note{font-size:12px;color:var(--muted);margin-right:6px}.edit-tool{appearance:none;border:1px solid var(--line);border-radius:7px;padding:7px 10px;background:#fff;color:var(--ink);font:700 12px/1 inherit;cursor:pointer}.edit-tool:hover{background:var(--soft)}.edit-tool.primary{background:var(--accent);border-color:var(--accent);color:#fff}.edit-tool[disabled]{display:none}.edit-label{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--ink)}.edit-label[hidden]{display:none}.edit-select{border:1px solid var(--line);border-radius:7px;padding:6px;background:#fff;font:inherit;color:var(--ink)}.edit-color{width:30px;height:30px;padding:2px;border:1px solid var(--line);border-radius:7px;background:#fff;cursor:pointer}.is-editing{outline:2px dashed var(--accent);outline-offset:6px;border-radius:8px}.user-image{max-width:100%;max-height:420px;display:block;margin:16px auto;border-radius:8px;border:1px solid var(--line)}.inserted-table{width:100%;margin:16px 0;border-collapse:collapse}.inserted-table td{border:1px solid var(--line);min-width:90px;height:32px;padding:8px}.editor-card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:18px;margin:16px 0}.editor-callout{margin:16px 0;padding:15px 18px;border-left:4px solid var(--accent);background:var(--soft);border-radius:0 8px 8px 0}.editor-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}.editor-quote{margin:16px 0;padding:15px 18px;border-left:4px solid #9a64e7;background:#f6f1ff;border-radius:0 8px 8px 0;color:#44356c}.editor-list{padding-left:22px;margin:16px 0}.editor-span-label{display:inline-block;padding:2px 7px;border-radius:5px;background:#e8f1ff;color:#075bbf;font-size:.88em;font-weight:750}.editor-span-note{color:var(--muted);font-size:.9em}.editor-span-green{color:#087960;font-weight:750}.editor-span-orange{color:#a45700;font-weight:750}.editor-span-red{color:#b7513c;font-weight:750}.editor-span-purple{color:#6a3dc0;font-weight:750}.editor-span-highlight{padding:1px 4px;border-radius:4px;background:#fff0a8;color:#573e00;font-weight:700}
+    .topbar-inner { max-width: 1180px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand { font-weight: 800; letter-spacing: 0; }
+    .nav { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .nav a { color: var(--ink); font-size: 13px; padding: 7px 10px; border: 1px solid transparent; border-radius: 8px; }
+    .nav a:hover { background: var(--soft); text-decoration: none; border-color: var(--line); }
+    .hero { border-bottom: 1px solid var(--line); background: linear-gradient(180deg, #eef9f2 0%, #fbfcfb 82%); }
+    .hero-inner { max-width: 1180px; margin: 0 auto; padding: 52px 20px 34px; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(340px, .95fr); gap: 30px; align-items: center; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 999px; background: #ddf5e7; color: #0c6b5f; font-size: 13px; font-weight: 700; }
+    h1 { font-size: clamp(32px, 5vw, 58px); line-height: 1.04; margin: 18px 0 18px; letter-spacing: 0; }
+    .lead { font-size: 18px; color: #394640; max-width: 700px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 9px 14px; border-radius: 8px; border: 1px solid var(--accent); background: var(--accent); color: #fff; font-weight: 700; }
+    .button.secondary { background: #fff; color: var(--accent); }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 26px; }
+    .stat { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 14px; }
+    .stat strong { display: block; font-size: 24px; }
+    .stat span { color: var(--muted); font-size: 13px; }
+    .phone-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; }
+    .phone-strip .image-button { min-height: 260px; }
+    .section { max-width: 1180px; margin: 0 auto; padding: 44px 20px; }
+    .section-head { display: flex; justify-content: space-between; gap: 20px; align-items: end; margin-bottom: 20px; }
+    .section h2 { font-size: 30px; line-height: 1.2; margin: 0 0 8px; letter-spacing: 0; }
+    .section-desc { color: var(--muted); max-width: 780px; margin: 0; }
+    .decision-flow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .flow-step { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px; min-height: 150px; position: relative; box-shadow: 0 10px 26px rgba(30, 50, 38, .06); }
+    .flow-step span { color: var(--accent); font-weight: 800; font-size: 13px; }
+    .flow-step h3 { margin: 8px 0; font-size: 18px; }
+    .flow-step p { margin: 0; color: var(--muted); font-size: 14px; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    table { width: 100%; border-collapse: collapse; min-width: 760px; }
+    th, td { padding: 14px 16px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    thead th { background: #f1f7f4; font-size: 13px; color: #33453b; }
+    tbody th { width: 190px; color: #0e655b; }
+    tr:last-child th, tr:last-child td { border-bottom: 0; }
+    .notice { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: start; border: 1px solid #f0d4a6; background: #fff7e8; border-radius: 8px; padding: 14px; margin-top: 14px; color: #5d3a11; }
+    .visual-stack { display: grid; gap: 18px; }
+    .visual-card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px; display: grid; grid-template-columns: minmax(260px, .86fr) minmax(360px, 1.14fr); gap: 18px; box-shadow: 0 12px 28px rgba(30, 50, 38, .06); }
+    .pill { display: inline-flex; width: fit-content; padding: 5px 9px; border-radius: 999px; background: var(--soft-2); color: #2a5c9f; font-size: 12px; font-weight: 800; }
+    .visual-copy h3 { font-size: 22px; margin: 10px 0 8px; }
+    .visual-copy p { color: var(--muted); margin: 0 0 12px; }
+    .visual-copy ul { padding-left: 20px; margin: 0; }
+    .visual-images { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; align-items: stretch; }
+    .image-button { appearance: none; border: 1px solid var(--line); padding: 0; background: #fff; border-radius: 8px; overflow: hidden; display: flex; cursor: zoom-in; min-height: 210px; box-shadow: 0 10px 24px rgba(30, 50, 38, .08); }
+    .image-button:hover { border-color: #9dcbbb; transform: translateY(-1px); transition: .18s ease; }
+    .thumb, .gallery-img { width: 100%; height: 100%; object-fit: contain; background: #f7faf8; }
+    .combo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .combo-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 18px; position: relative; min-height: 210px; }
+    .combo-index { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 28px; border-radius: 8px; background: #e4f6ee; color: var(--accent); font-weight: 800; font-size: 13px; }
+    .combo-card h3 { margin: 12px 0 8px; font-size: 20px; }
+    .formula { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; background: #f3f7f5; border: 1px solid var(--line); border-radius: 8px; padding: 10px; color: #29443b; }
+    .gallery-toolbar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+    .filter-btn { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 9px 12px; cursor: pointer; color: var(--ink); font-weight: 700; }
+    .filter-btn.active { border-color: var(--accent); color: #fff; background: var(--accent); }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+    .gallery-card { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #fff; display: flex; flex-direction: column; min-height: 380px; }
+    .gallery-card .image-button { border: 0; border-bottom: 1px solid var(--line); border-radius: 0; min-height: 230px; box-shadow: none; }
+    .gallery-meta { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 12px 0; }
+    .gallery-meta span { font-size: 12px; border: 1px solid var(--line); border-radius: 999px; padding: 4px 8px; color: var(--muted); }
+    .gallery-card p { color: #4f5b55; font-size: 13px; margin: 10px 12px; flex: 1; }
+    .gallery-card a { margin: 0 12px 14px; font-weight: 700; font-size: 13px; }
+    .source-list { columns: 2; column-gap: 34px; padding-left: 18px; }
+    .source-list li { break-inside: avoid; margin: 0 0 9px; }
+    .footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); text-align: center; }
+    .modal { position: fixed; inset: 0; background: rgba(9, 18, 14, .78); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 40; }
+    .modal.open { display: flex; }
+    .modal-dialog { max-width: min(1120px, 96vw); max-height: 94vh; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow); display: grid; grid-template-rows: auto 1fr auto; }
+    .modal-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+    .modal-close { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 7px 10px; cursor: pointer; }
+    .modal img { max-width: 100%; max-height: 75vh; object-fit: contain; background: #f7faf8; }
+    .modal-caption { padding: 10px 12px; color: var(--muted); font-size: 14px; }
+    @media (max-width: 900px) {
+      .hero-inner, .visual-card { grid-template-columns: 1fr; }
+      .decision-flow, .combo-grid { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+      .source-list { columns: 1; }
+      .nav { display: none; }
+      .stats { grid-template-columns: 1fr; }
+      .phone-strip { grid-template-columns: 1fr 1fr; }
+      .editor-columns { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .topbar-inner, .section, .hero-inner { padding-left: 14px; padding-right: 14px; }
+      h1 { font-size: 34px; }
+      .phone-strip { grid-template-columns: 1fr; }
+      .image-button { min-height: 190px; }
+      .gallery-card { min-height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">WhatsApp 模板转化手册</div>
+        <nav class="nav" aria-label="页面导航">
+          <a href="#overview">总览</a>
+          <a href="#buttons">按钮</a>
+          <a href="#visuals">视觉玩法</a>
+          <a href="#combos">组合例子</a>
+          <a href="#gallery">效果图</a>
+          <a href="#sources">官方链接</a>
+        </nav>
+      </div>
+    </header>
+    <div class="editor-bar">
+      <span class="editor-note" id="editNote">阅读模式 · 点击“编辑页面”后可修改内容</span>
+      <button class="edit-tool primary" id="editToggle" type="button">编辑页面</button><button class="edit-tool" id="undoEdit" type="button" disabled>撤回</button><button class="edit-tool" id="saveEdit" type="button" disabled>保存</button>
+      <button class="edit-tool" id="insertImage" type="button" disabled>插入图片</button><button class="edit-tool" id="insertTable" type="button" disabled>插入表格</button><button class="edit-tool" id="addSection" type="button" disabled>新增 Section</button>
+      <label class="edit-label" id="headingLabel" hidden>标题 <select class="edit-select" id="headingLevel"><option value="h1">H1</option><option value="h2" selected>H2</option><option value="h3">H3</option><option value="h4">H4</option></select></label><button class="edit-tool" id="addHeading" type="button" disabled>新增标题</button>
+      <button class="edit-tool" id="addBullet" type="button" disabled>新增项目符号</button><button class="edit-tool" id="addNumbered" type="button" disabled>新增编号</button>
+      <label class="edit-label" id="blockLabel" hidden>区块 <select class="edit-select" id="blockType"><option value="card">信息卡</option><option value="callout">重点提示</option><option value="columns">两栏内容</option><option value="quote">引用备注</option></select></label><button class="edit-tool" id="addBlock" type="button" disabled>新建区块</button>
+      <button class="edit-tool" id="boldText" type="button" disabled>粗体</button><label class="edit-label" id="fontSizeLabel" hidden>字号 <select class="edit-select" id="fontSize"><option value="13px">小</option><option value="15px" selected>中</option><option value="18px">大</option><option value="24px">标题</option></select></label><label class="edit-label" id="fontColorLabel" hidden>颜色 <input class="edit-color" id="fontColor" type="color" value="#17201b"></label>
+      <label class="edit-label" id="spanLabel" hidden>Span <select class="edit-select" id="spanType"><option value="emphasis">强调</option><option value="label">蓝色标签</option><option value="green">绿色强调</option><option value="orange">橙色强调</option><option value="red">红色强调</option><option value="purple">紫色强调</option><option value="highlight">黄色高亮</option><option value="note">浅色说明</option></select></label><button class="edit-tool" id="addSpan" type="button" disabled>新增 Span</button>
+      <input id="imagePicker" type="file" accept="image/*" hidden>
+    </div>
+
+    <section class="hero" id="overview">
+      <div class="hero-inner">
+        <div>
+          <span class="eyebrow">Meta 官方文档整理 · 2026-07-08</span>
+          <h1>WhatsApp 模板如何做得更能转化</h1>
+          <p class="lead">把模板能力拆成“看见、理解、行动、闭环”四步：用媒体或商品卡抢首屏，用个性化正文解释理由，用按钮缩短路径，用目录、优惠码或 Flow 承接转化。</p>
+          <div class="hero-actions">
+            <a class="button" href="#combos">看组合玩法</a>
+            <a class="button secondary" href="#gallery">看官方效果图</a>
+          </div>
+          <div class="stats" aria-label="内容概览">
+            <div class="stat"><strong>28</strong><span>张官方示例图</span></div>
+            <div class="stat"><strong>7</strong><span>类核心按钮玩法</span></div>
+            <div class="stat"><strong>22</strong><span>个官方参考链接</span></div>
+          </div>
+        </div>
+        <div class="phone-strip" aria-label="精选 WhatsApp 模板示意图">
+          <button class="image-button" data-full="meta-whatsapp-template-assets/21_marketing_templates_overview.png" data-caption="WhatsApp marketing template from Lucky Shrub with a header image, welcome message, WELCOME25 coupon code, and View deals, Call us, and Unsubscribe buttons"><img class="thumb" src="meta-whatsapp-template-assets/21_marketing_templates_overview.png" alt="WhatsApp marketing template from Lucky Shrub with a header image, welcome message, WELCOME25 coupon code, and View deals, Call us, and Unsubscribe buttons" loading="lazy"></button>
+          <button class="image-button" data-full="meta-whatsapp-template-assets/08_limited_time_offer.png" data-caption="WhatsApp marketing template message with image header, Limited-Time Offer timer, body text, Copy code and URL buttons, each labeled"><img class="thumb" src="meta-whatsapp-template-assets/08_limited_time_offer.png" alt="WhatsApp marketing template message with image header, Limited-Time Offer timer, body text, Copy code and URL buttons, each labeled" loading="lazy"></button>
+          <button class="image-button" data-full="meta-whatsapp-template-assets/02_product_card_carousel.png" data-caption="WhatsApp Product Card Carousel message with body text and a scrollable product card showing Black Prince Echeveria, $9.99, and a View button"><img class="thumb" src="meta-whatsapp-template-assets/02_product_card_carousel.png" alt="WhatsApp Product Card Carousel message with body text and a scrollable product card showing Black Prince Echeveria, $9.99, and a View button" loading="lazy"></button>
+          <button class="image-button" data-full="meta-whatsapp-template-assets/19_interactive_media_carousel.png" data-caption="Annotated interactive media carousel message with three plant cards labeling body text, card header, card body text, and URL button"><img class="thumb" src="meta-whatsapp-template-assets/19_interactive_media_carousel.png" alt="Annotated interactive media carousel message with three plant cards labeling body text, card header, card body text, and URL button" loading="lazy"></button>
+        </div>
+      </div>
+    </section>
+
+    <main id="editorContent" contenteditable="false">
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2>先按转化路径理解模板</h2>
+            <p class="section-desc">不要先想“能放几个按钮”，先想用户看到消息后的下一步。模板的每个组件都应该服务一个动作。</p>
+          </div>
+        </div>
+        <div class="decision-flow">
+          <article class="flow-step"><span>01 看见</span><h3>视觉抓注意</h3><p>图片、视频、商品卡、倒计时，让用户第一眼知道这条消息和自己有关。</p></article>
+          <article class="flow-step"><span>02 理解</span><h3>正文讲理由</h3><p>用姓名、品类、金额、时间、优惠码变量，说清楚为什么现在行动。</p></article>
+          <article class="flow-step"><span>03 行动</span><h3>按钮少而准</h3><p>URL、Copy Code、View、Quick Reply、Phone、Flow 只保留最关键下一步。</p></article>
+          <article class="flow-step"><span>04 闭环</span><h3>减少跳出</h3><p>能在 WhatsApp 内完成就用 View、SPM、MPM、Flow；必须跳站时 URL 带好追踪参数。</p></article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head"><div><h2>模板组件能做什么</h2><p class="section-desc">Meta 官方把模板拆成 header、body、footer、buttons。唯一必需的是 body，其余按目标组合。</p></div></div>
+        <div class="table-wrap"><table><thead><tr><th>能力</th><th>官方边界</th><th>转化价值</th></tr></thead><tbody><tr><th>文本 Header</th><td>1 个 / 60 字符 / 支持 1 个参数</td><td>首屏点题：优惠截止、订单号、活动主题</td></tr><tr><th>媒体 Header</th><td>image、video、GIF、document；媒体先上传并用 header_handle 引用</td><td>用图片或短视频抢注意力，用 PDF/票据/报价单增强信任</td></tr><tr><th>位置 Header</th><td>Utility/Marketing 可用；点击打开默认地图；不支持实时位置</td><td>门店、配送、取货、预约到店</td></tr><tr><th>Body</th><td>必需；最多 1024 字符；支持多个变量</td><td>姓名、金额、商品、优惠码、时间都放在这里做个性化</td></tr><tr><th>Footer</th><td>可选；最多 60 字符；限时优惠模板不支持 footer</td><td>退订、客服提示、轻量补充说明</td></tr><tr><th>Buttons</th><td>最多 10 个；不同按钮类型另有限制</td><td>把用户带到下一步：买、复制、咨询、填表、拨号</td></tr></tbody></table></div>
+      </section>
+
+      <section class="section" id="buttons">
+        <div class="section-head"><div><h2>按钮玩法决策表</h2><p class="section-desc">按钮越多不一定越好。超过 3 个按钮会出现折叠；4 个以上按钮或 Quick Reply 与其他按钮混用时，桌面端可能不能直接查看。</p></div></div>
+        <div class="table-wrap"><table><thead><tr><th>按钮类型</th><th>官方限制 / 行为</th><th>建议用法</th></tr></thead><tbody><tr><th>URL</th><td>最多 2 个；打开默认移动浏览器；URL 最多 2000 字符；支持 1 个尾部变量</td><td>商品页、支付页、预约页；变量带 coupon、sku、utm</td></tr><tr><th>Quick Reply</th><td>最多 10 个；点击后向商家发送按钮文本；混用时需分组</td><td>“我要优惠”“咨询尺码”“不再接收”，用于轻交互和意向分层</td></tr><tr><th>Copy Code</th><td>最多 1 个；点击复制发送时定义的文本；示例值最多 20 字符</td><td>优惠码、推荐码、营销码</td></tr><tr><th>Phone Number</th><td>最多 1 个；点击拨号；标签最多 25 字符，号码最多 20 字符</td><td>高客单价、B2B、人工确认订单</td></tr><tr><th>Voice Call</th><td>点击后发起 WhatsApp call 给商家</td><td>即时咨询，比电话按钮更像聊天内动作</td></tr><tr><th>FLOW</th><td>模板中可用 FLOW 按钮；按钮文字最多 25 字符</td><td>问卷、报价、预约、资格判断、偏好收集</td></tr><tr><th>SPM / MPM</th><td>商品目录专用按钮；从目录拉商品信息</td><td>留在 WhatsApp 内看商品、加购、下单</td></tr></tbody></table></div>
+        <div class="notice"><strong>!</strong><div>视觉上建议把主 CTA 控制在 1-2 个。需要多意图收集时，优先用 Quick Reply 或 Flow，而不是堆满 URL、电话和回复按钮。</div></div>
+      </section>
+
+      <section class="section" id="visuals">
+        <div class="section-head"><div><h2>高转化视觉组件</h2><p class="section-desc">下面把官方示例图和玩法放在一起看：每一种视觉组件背后都对应不同的转化场景。</p></div></div>
+        <div class="visual-stack">
+    <article class="visual-card">
+      <div class="visual-copy">
+        <span class="pill">抢首屏</span>
+        <h3>媒体 Header</h3>
+        <p>模板顶部的视觉位，适合新品、折扣、强视觉 SKU、服务前后对比、报价单或票据。</p>
+        <ul><li>图片/短视频先讲“为什么现在点开”</li><li>配合 URL 或 Copy Code，把注意力直接导向行动</li></ul>
+      </div>
+      <div class="visual-images"><button class="image-button" data-full="meta-whatsapp-template-assets/21_marketing_templates_overview.png" data-caption="WhatsApp marketing template from Lucky Shrub with a header image, welcome message, WELCOME25 coupon code, and View deals, Call us, and Unsubscribe buttons"><img class="thumb" src="meta-whatsapp-template-assets/21_marketing_templates_overview.png" alt="WhatsApp marketing template from Lucky Shrub with a header image, welcome message, WELCOME25 coupon code, and View deals, Call us, and Unsubscribe buttons" loading="lazy"></button><button class="image-button" data-full="meta-whatsapp-template-assets/28_custom_marketing_templates.png" data-caption="Custom marketing template preview with labeled image header, body, footer, URL, phone number, and quick-reply buttons"><img class="thumb" src="meta-whatsapp-template-assets/28_custom_marketing_templates.png" alt="Custom marketing template preview with labeled image header, body, footer, URL, phone number, and quick-reply buttons" loading="lazy"></button></div>
+    </article>
+    <article class="visual-card">
+      <div class="visual-copy">
+        <span class="pill">多卖点种草</span>
+        <h3>Media / Interactive Carousel</h3>
+        <p>最多 10 张媒体卡，每张卡可以是一张图或视频，适合多 SKU、多套餐、卖点拆解。</p>
+        <ul><li>每张卡只讲一个卖点</li><li>URL 到对应 SKU，Quick Reply 承接“帮我选”</li></ul>
+      </div>
+      <div class="visual-images"><button class="image-button" data-full="meta-whatsapp-template-assets/10_media_card_carousel.png" data-caption="WhatsApp marketing template message with body text and a horizontally scrollable Media Card Carousel of succulent product cards"><img class="thumb" src="meta-whatsapp-template-assets/10_media_card_carousel.png" alt="WhatsApp marketing template message with body text and a horizontally scrollable Media Card Carousel of succulent product cards" loading="lazy"></button><button class="image-button" data-full="meta-whatsapp-template-assets/19_interactive_media_carousel.png" data-caption="Annotated interactive media carousel message with three plant cards labeling body text, card header, card body text, and URL button"><img class="thumb" src="meta-whatsapp-template-assets/19_interactive_media_carousel.png" alt="Annotated interactive media carousel message with three plant cards labeling body text, card header, card body text, and URL button" loading="lazy"></button><button class="image-button" data-full="meta-whatsapp-template-assets/20_interactive_media_carousel.png" data-caption="Interactive media carousel message with three plant cards, each showing two quick-reply buttons labeled Learn more and Add to favorites"><img class="thumb" src="meta-whatsapp-template-assets/20_interactive_media_carousel.png" alt="Interactive media carousel message with three plant cards, each showing two quick-reply buttons labeled Learn more and Add to favorites" loading="lazy"></button></div>
+    </article>
+    <article class="visual-card">
+      <div class="visual-copy">
+        <span class="pill">目录闭环</span>
+        <h3>Product Card Carousel</h3>
+        <p>从 Catalog 拉商品图、标题和价格。View 按钮可留在 WhatsApp 内看详情、加购、提交订单。</p>
+        <ul><li>目录完整时优先 View，减少跳转摩擦</li><li>需要复杂 checkout 时改用 URL</li></ul>
+      </div>
+      <div class="visual-images"><button class="image-button" data-full="meta-whatsapp-template-assets/02_product_card_carousel.png" data-caption="WhatsApp Product Card Carousel message with body text and a scrollable product card showing Black Prince Echeveria, $9.99, and a View button"><img class="thumb" src="meta-whatsapp-template-assets/02_product_card_carousel.png" alt="WhatsApp Product Card Carousel message with body text and a scrollable product card showing Black Prince Echeveria, $9.99, and a View button" loading="lazy"></button><button class="image-button" data-full="meta-whatsapp-template-assets/03_product_card_carousel.png" data-caption="Product card carousel diagram labeling message body text, product image, product title, product price, and View button across three succulent product cards"><img class="thumb" src="meta-whatsapp-template-assets/03_product_card_carousel.png" alt="Product card carousel diagram labeling message body text, product image, product title, product price, and View button across three succulent product cards" loading="lazy"></button><button class="image-button" data-full="meta-whatsapp-template-assets/04_product_card_carousel.png" data-caption="Product details view for Black Prince Echeveria, $9.99, with description, Message business, and Add to order request buttons"><img class="thumb" src="meta-whatsapp-template-assets/04_product_card_carousel.png" alt="Product details view for Black Prince Echeveria, $9.99, with description, Message business, and Add to order request buttons" loading="lazy"></button><button class="image-button" data-full="meta-whatsapp-template-assets/05_product_card_carousel.png" data-caption="Your cart view with 1 item, Black Prince Echeveria at $9.99, an estimated total of $9.99, and a Place order button"><img class="thumb" src="meta-whatsapp-template-assets/05_product_card_carousel.png" alt="Your cart view with 1 item, Black Prince Echeveria at $9.99, an estimated total of $9.99, and a Place order button" loading="lazy"></button></div>
+    </article>
+    <article class="visual-card">
+      <div class="visual-copy">
+        <span class="pill">商品召回</span>
+        <h3>SPM / MPM</h3>
+        <p>SPM 适合单品补货、浏览未购；MPM 适合购物车召回、套装清单和节日选品。</p>
+        <ul><li>SPM 用一个强理由推动下单</li><li>MPM 用分组降低选择成本</li></ul>
+      </div>
+      <div class="visual-images"><button class="image-button" data-full="meta-whatsapp-template-assets/12_single_product_message.png" data-caption="Single-product message annotated with product image, product title, price, card body text, footer, and View button"><img class="thumb" src="meta-whatsapp-template-assets/12_single_product_message.png" alt="Single-product message annotated with product image, product title, price, card body text, footer, and View button" loading="lazy"></button><button class="image-button" data-full="meta-whatsapp-template-assets/16_multi_product_message.png" data-caption="Two annotated WhatsApp mockups: MPM template message labeling header image, header text, body text, View items button; and item list view with sections"><img class="thumb" src="meta-whatsapp-template-assets/16_multi_product_message.png" alt="Two annotated WhatsApp mockups: MPM template message labeling header image, header text, body text, View items button; and item list view with sections" loading="lazy"></button><button class="image-button" data-full="meta-whatsapp-template-assets/18_multi_product_message.png" data-caption="Annotated WhatsApp MPM item list view labeling a section title and an item in section, with a green View Cart button"><img class="thumb" src="meta-whatsapp-template-assets/18_multi_product_message.png" alt="Annotated WhatsApp MPM item list view labeling a section title and an item in section, with a green View Cart button" loading="lazy"></button></div>
+    </article>
+    <article class="visual-card">
+      <div class="visual-copy">
+        <span class="pill">紧迫感</span>
+        <h3>Limited-Time Offer / Coupon</h3>
+        <p>限时优惠可显示过期时间和倒计时，优惠码模板可直接 Copy Code，再接 URL。</p>
+        <ul><li>“倒计时 + 复制码 + 去使用”是一条完整转化链</li><li>Web/Desktop 对限时优惠支持有限，需考虑移动端体验</li></ul>
+      </div>
+      <div class="visual-images"><button class="image-button" data-full="meta-whatsapp-template-assets/08_limited_time_offer.png" data-caption="WhatsApp marketing template message with image header, Limited-Time Offer timer, body text, Copy code and URL buttons, each labeled"><img class="thumb" src="meta-whatsapp-template-assets/08_limited_time_offer.png" alt="WhatsApp marketing template message with image header, Limited-Time Offer timer, body text, Copy code and URL buttons, each labeled" loading="lazy"></button><button class="image-button" data-full="meta-whatsapp-template-assets/09_limited_time_offer.png" data-caption="Offer expiration details section showing labeled heading, expiration timer, and offer code in a Limited-Time Offer message"><img class="thumb" src="meta-whatsapp-template-assets/09_limited_time_offer.png" alt="Offer expiration details section showing labeled heading, expiration timer, and offer code in a Limited-Time Offer message" loading="lazy"></button><button class="image-button" data-full="meta-whatsapp-template-assets/23_marketing_templates_overview.png" data-caption="WhatsApp coupon code template from Markt offering code WHYNOT for 30% off, with Copy code and Start shopping buttons and a Code copied confirmation"><img class="thumb" src="meta-whatsapp-template-assets/23_marketing_templates_overview.png" alt="WhatsApp coupon code template from Markt offering code WHYNOT for 30% off, with Copy code and Start shopping buttons and a Code copied confirmation" loading="lazy"></button><button class="image-button" data-full="meta-whatsapp-template-assets/27_coupon_templates.png" data-caption="A coupon code template message in WhatsApp with annotations showing the body text, coupon_code, and discount parameters, copy code button, and quick reply button"><img class="thumb" src="meta-whatsapp-template-assets/27_coupon_templates.png" alt="A coupon code template message in WhatsApp with annotations showing the body text, coupon_code, and discount parameters, copy code button, and quick reply button" loading="lazy"></button></div>
+    </article>
+    </div>
+      </section>
+
+      <section class="section" id="combos">
+        <div class="section-head"><div><h2>推荐组合例子</h2><p class="section-desc">可以直接作为模板 brief 使用：组件组合、正文方向和适用场景都放在一张卡里。</p></div></div>
+        <div class="combo-grid">
+  <article class="combo-card">
+    <span class="combo-index">01</span>
+    <h3>限时优惠爆发</h3>
+    <p class="formula">image/video header + 个性化 body + Limited-Time Offer + Copy Code + URL</p>
+    <p><strong>例子：</strong>Hi {{name}}，你浏览过的 {{category}} 今天 22:00 前 25% off。复制码 SAVE25，点“立即使用”。</p>
+    <p><strong>适合：</strong>促销、弃购、节日档</p>
+  </article>
+  <article class="combo-card">
+    <span class="combo-index">02</span>
+    <h3>留在 WhatsApp 内下单</h3>
+    <p class="formula">Product Card Carousel + View</p>
+    <p><strong>例子：</strong>给你挑了 5 个适合 {{use_case}} 的款式，卡片展示商品，用户点 View 加购。</p>
+    <p><strong>适合：</strong>目录完整、低客单、冲动购买</p>
+  </article>
+  <article class="combo-card">
+    <span class="combo-index">03</span>
+    <h3>内容种草到官网</h3>
+    <p class="formula">Media Card Carousel + URL + Quick Reply</p>
+    <p><strong>例子：</strong>每张卡一个卖点视频/图，URL 到对应 SKU；Quick Reply 是“帮我选”。</p>
+    <p><strong>适合：</strong>官网 checkout 更强、需要 upsell/cross-sell</p>
+  </article>
+  <article class="combo-card">
+    <span class="combo-index">04</span>
+    <h3>高意向筛选</h3>
+    <p class="formula">Body + FLOW button</p>
+    <p><strong>例子：</strong>30 秒帮你匹配方案，Flow 内收集预算、偏好、地区、时间，完成后转客服或报价。</p>
+    <p><strong>适合：</strong>教育、保险、医美、SaaS、B2B 线索</p>
+  </article>
+  <article class="combo-card">
+    <span class="combo-index">05</span>
+    <h3>单品召回</h3>
+    <p class="formula">SPM + 个性化 body + View</p>
+    <p><strong>例子：</strong>{{name}}，你看过的这款补货了。今天下单可用 {{code}}。</p>
+    <p><strong>适合：</strong>浏览未购、降价、补货、库存低</p>
+  </article>
+  <article class="combo-card">
+    <span class="combo-index">06</span>
+    <h3>购物车召回</h3>
+    <p class="formula">MPM + 分组 + 折扣变量</p>
+    <p><strong>例子：</strong>Header 提醒购物车，Body 放折扣码，View items 展示多个商品和套装。</p>
+    <p><strong>适合：</strong>多商品弃购、搭配购买</p>
+  </article>
+  <article class="combo-card">
+    <span class="combo-index">07</span>
+    <h3>线下转化</h3>
+    <p class="formula">Location header + body + Quick Reply/Phone</p>
+    <p><strong>例子：</strong>门店活动、预约到店、配送中；地图打开导航，Quick Reply 做改期/联系客服。</p>
+    <p><strong>适合：</strong>门店、到店预约、本地服务</p>
+  </article></div>
+      </section>
+
+      <section class="section" id="gallery">
+        <div class="section-head"><div><h2>官方效果图画廊</h2><p class="section-desc">点击任意图片可放大查看；每张图都保留了官方来源链接。未发现 Meta 官方页面中可直接下载的教程视频或效果视频文件。</p></div></div>
+        <div class="gallery-toolbar" aria-label="筛选图片">
+          <button class="filter-btn active" data-filter="all">全部</button>
+          <button class="filter-btn" data-filter="轮播">轮播</button>
+          <button class="filter-btn" data-filter="商品目录">商品目录</button>
+          <button class="filter-btn" data-filter="优惠">优惠</button>
+          <button class="filter-btn" data-filter="营销模板">营销模板</button>
+          <button class="filter-btn" data-filter="按钮">按钮</button>
+        </div>
+        <div class="gallery-grid">
+      <article class="gallery-card" data-kind="按钮">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/01_components.png" data-caption="WhatsApp template message showing two buttons and a See all options button, with the expanded All Options panel listing the remaining buttons"><img class="gallery-img" src="meta-whatsapp-template-assets/01_components.png" alt="WhatsApp template message showing two buttons and a See all options button, with the expanded All Options panel listing the remaining buttons" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>按钮</span><span>01_components.png</span>
+        </div>
+        <p>WhatsApp template message showing two buttons and a See all options button, with the expanded All Options panel listing the remaining buttons</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/components?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="轮播">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/02_product_card_carousel.png" data-caption="WhatsApp Product Card Carousel message with body text and a scrollable product card showing Black Prince Echeveria, $9.99, and a View button"><img class="gallery-img" src="meta-whatsapp-template-assets/02_product_card_carousel.png" alt="WhatsApp Product Card Carousel message with body text and a scrollable product card showing Black Prince Echeveria, $9.99, and a View button" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>轮播</span><span>02_product_card_carousel.png</span>
+        </div>
+        <p>WhatsApp Product Card Carousel message with body text and a scrollable product card showing Black Prince Echeveria, $9.99, and a View button</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/product-card-carousel-template-messages?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="轮播">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/03_product_card_carousel.png" data-caption="Product card carousel diagram labeling message body text, product image, product title, product price, and View button across three succulent product cards"><img class="gallery-img" src="meta-whatsapp-template-assets/03_product_card_carousel.png" alt="Product card carousel diagram labeling message body text, product image, product title, product price, and View button across three succulent product cards" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>轮播</span><span>03_product_card_carousel.png</span>
+        </div>
+        <p>Product card carousel diagram labeling message body text, product image, product title, product price, and View button across three succulent product cards</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/product-card-carousel-template-messages?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="轮播">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/04_product_card_carousel.png" data-caption="Product details view for Black Prince Echeveria, $9.99, with description, Message business, and Add to order request buttons"><img class="gallery-img" src="meta-whatsapp-template-assets/04_product_card_carousel.png" alt="Product details view for Black Prince Echeveria, $9.99, with description, Message business, and Add to order request buttons" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>轮播</span><span>04_product_card_carousel.png</span>
+        </div>
+        <p>Product details view for Black Prince Echeveria, $9.99, with description, Message business, and Add to order request buttons</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/product-card-carousel-template-messages?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="轮播">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/05_product_card_carousel.png" data-caption="Your cart view with 1 item, Black Prince Echeveria at $9.99, an estimated total of $9.99, and a Place order button"><img class="gallery-img" src="meta-whatsapp-template-assets/05_product_card_carousel.png" alt="Your cart view with 1 item, Black Prince Echeveria at $9.99, an estimated total of $9.99, and a Place order button" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>轮播</span><span>05_product_card_carousel.png</span>
+        </div>
+        <p>Your cart view with 1 item, Black Prince Echeveria at $9.99, an estimated total of $9.99, and a Place order button</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/product-card-carousel-template-messages?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="轮播">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/06_product_card_carousel.png" data-caption="WhatsApp message thread order confirmation reading Order via catalog, 1 item, $9.99 estimated total, with a View details button"><img class="gallery-img" src="meta-whatsapp-template-assets/06_product_card_carousel.png" alt="WhatsApp message thread order confirmation reading Order via catalog, 1 item, $9.99 estimated total, with a View details button" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>轮播</span><span>06_product_card_carousel.png</span>
+        </div>
+        <p>WhatsApp message thread order confirmation reading Order via catalog, 1 item, $9.99 estimated total, with a View details button</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/product-card-carousel-template-messages?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="轮播">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/07_product_card_carousel.png" data-caption="Your sent cart view with 1 item, Black Prince Echeveria, $9.99, Quantity 1, and an estimated total of $9.99"><img class="gallery-img" src="meta-whatsapp-template-assets/07_product_card_carousel.png" alt="Your sent cart view with 1 item, Black Prince Echeveria, $9.99, Quantity 1, and an estimated total of $9.99" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>轮播</span><span>07_product_card_carousel.png</span>
+        </div>
+        <p>Your sent cart view with 1 item, Black Prince Echeveria, $9.99, Quantity 1, and an estimated total of $9.99</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/product-card-carousel-template-messages?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="优惠">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/08_limited_time_offer.png" data-caption="WhatsApp marketing template message with image header, Limited-Time Offer timer, body text, Copy code and URL buttons, each labeled"><img class="gallery-img" src="meta-whatsapp-template-assets/08_limited_time_offer.png" alt="WhatsApp marketing template message with image header, Limited-Time Offer timer, body text, Copy code and URL buttons, each labeled" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>优惠</span><span>08_limited_time_offer.png</span>
+        </div>
+        <p>WhatsApp marketing template message with image header, Limited-Time Offer timer, body text, Copy code and URL buttons, each labeled</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/limited-time-offer-templates?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="优惠">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/09_limited_time_offer.png" data-caption="Offer expiration details section showing labeled heading, expiration timer, and offer code in a Limited-Time Offer message"><img class="gallery-img" src="meta-whatsapp-template-assets/09_limited_time_offer.png" alt="Offer expiration details section showing labeled heading, expiration timer, and offer code in a Limited-Time Offer message" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>优惠</span><span>09_limited_time_offer.png</span>
+        </div>
+        <p>Offer expiration details section showing labeled heading, expiration timer, and offer code in a Limited-Time Offer message</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/limited-time-offer-templates?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="轮播">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/10_media_card_carousel.png" data-caption="WhatsApp marketing template message with body text and a horizontally scrollable Media Card Carousel of succulent product cards"><img class="gallery-img" src="meta-whatsapp-template-assets/10_media_card_carousel.png" alt="WhatsApp marketing template message with body text and a horizontally scrollable Media Card Carousel of succulent product cards" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>轮播</span><span>10_media_card_carousel.png</span>
+        </div>
+        <p>WhatsApp marketing template message with body text and a horizontally scrollable Media Card Carousel of succulent product cards</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/media-card-carousel-templates?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="轮播">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/11_media_card_carousel.png" data-caption="Media Card Carousel template annotated with message body text, card media header, card body text, and card buttons across three succulent cards"><img class="gallery-img" src="meta-whatsapp-template-assets/11_media_card_carousel.png" alt="Media Card Carousel template annotated with message body text, card media header, card body text, and card buttons across three succulent cards" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>轮播</span><span>11_media_card_carousel.png</span>
+        </div>
+        <p>Media Card Carousel template annotated with message body text, card media header, card body text, and card buttons across three succulent cards</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/media-card-carousel-templates?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="商品目录">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/12_single_product_message.png" data-caption="Single-product message annotated with product image, product title, price, card body text, footer, and View button"><img class="gallery-img" src="meta-whatsapp-template-assets/12_single_product_message.png" alt="Single-product message annotated with product image, product title, price, card body text, footer, and View button" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>商品目录</span><span>12_single_product_message.png</span>
+        </div>
+        <p>Single-product message annotated with product image, product title, price, card body text, footer, and View button</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/spm-template-messages?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="商品目录">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/13_single_product_message.png" data-caption="WhatsApp product Details screen for the Echeveria product with Message business and Add to order request buttons"><img class="gallery-img" src="meta-whatsapp-template-assets/13_single_product_message.png" alt="WhatsApp product Details screen for the Echeveria product with Message business and Add to order request buttons" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>商品目录</span><span>13_single_product_message.png</span>
+        </div>
+        <p>WhatsApp product Details screen for the Echeveria product with Message business and Add to order request buttons</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/spm-template-messages?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="商品目录">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/14_single_product_message.png" data-caption="WhatsApp Order via catalog message showing 1 item at 25.00 dollars estimated total with a View details link"><img class="gallery-img" src="meta-whatsapp-template-assets/14_single_product_message.png" alt="WhatsApp Order via catalog message showing 1 item at 25.00 dollars estimated total with a View details link" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>商品目录</span><span>14_single_product_message.png</span>
+        </div>
+        <p>WhatsApp Order via catalog message showing 1 item at 25.00 dollars estimated total with a View details link</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/spm-template-messages?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="商品目录">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/15_single_product_message.png" data-caption="WhatsApp Your sent cart order details for Echeveria, Quantity 1, with a 25.00 dollars estimated total"><img class="gallery-img" src="meta-whatsapp-template-assets/15_single_product_message.png" alt="WhatsApp Your sent cart order details for Echeveria, Quantity 1, with a 25.00 dollars estimated total" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>商品目录</span><span>15_single_product_message.png</span>
+        </div>
+        <p>WhatsApp Your sent cart order details for Echeveria, Quantity 1, with a 25.00 dollars estimated total</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/spm-template-messages?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="商品目录">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/16_multi_product_message.png" data-caption="Two annotated WhatsApp mockups: MPM template message labeling header image, header text, body text, View items button; and item list view with sections"><img class="gallery-img" src="meta-whatsapp-template-assets/16_multi_product_message.png" alt="Two annotated WhatsApp mockups: MPM template message labeling header image, header text, body text, View items button; and item list view with sections" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>商品目录</span><span>16_multi_product_message.png</span>
+        </div>
+        <p>Two annotated WhatsApp mockups: MPM template message labeling header image, header text, body text, View items button; and item list view with sections</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/mpm-template-messages?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="商品目录">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/17_multi_product_message.png" data-caption="Two WhatsApp mockups: cart view listing two items with a total, and item details view for a product with Message Business and Add to Cart options"><img class="gallery-img" src="meta-whatsapp-template-assets/17_multi_product_message.png" alt="Two WhatsApp mockups: cart view listing two items with a total, and item details view for a product with Message Business and Add to Cart options" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>商品目录</span><span>17_multi_product_message.png</span>
+        </div>
+        <p>Two WhatsApp mockups: cart view listing two items with a total, and item details view for a product with Message Business and Add to Cart options</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/mpm-template-messages?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="商品目录">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/18_multi_product_message.png" data-caption="Annotated WhatsApp MPM item list view labeling a section title and an item in section, with a green View Cart button"><img class="gallery-img" src="meta-whatsapp-template-assets/18_multi_product_message.png" alt="Annotated WhatsApp MPM item list view labeling a section title and an item in section, with a green View Cart button" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>商品目录</span><span>18_multi_product_message.png</span>
+        </div>
+        <p>Annotated WhatsApp MPM item list view labeling a section title and an item in section, with a green View Cart button</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/mpm-template-messages?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="轮播">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/19_interactive_media_carousel.png" data-caption="Annotated interactive media carousel message with three plant cards labeling body text, card header, card body text, and URL button"><img class="gallery-img" src="meta-whatsapp-template-assets/19_interactive_media_carousel.png" alt="Annotated interactive media carousel message with three plant cards labeling body text, card header, card body text, and URL button" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>轮播</span><span>19_interactive_media_carousel.png</span>
+        </div>
+        <p>Annotated interactive media carousel message with three plant cards labeling body text, card header, card body text, and URL button</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/messages/interactive-media-carousel-messages/?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="轮播">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/20_interactive_media_carousel.png" data-caption="Interactive media carousel message with three plant cards, each showing two quick-reply buttons labeled Learn more and Add to favorites"><img class="gallery-img" src="meta-whatsapp-template-assets/20_interactive_media_carousel.png" alt="Interactive media carousel message with three plant cards, each showing two quick-reply buttons labeled Learn more and Add to favorites" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>轮播</span><span>20_interactive_media_carousel.png</span>
+        </div>
+        <p>Interactive media carousel message with three plant cards, each showing two quick-reply buttons labeled Learn more and Add to favorites</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/messages/interactive-media-carousel-messages/?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="营销模板">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/21_marketing_templates_overview.png" data-caption="WhatsApp marketing template from Lucky Shrub with a header image, welcome message, WELCOME25 coupon code, and View deals, Call us, and Unsubscribe buttons"><img class="gallery-img" src="meta-whatsapp-template-assets/21_marketing_templates_overview.png" alt="WhatsApp marketing template from Lucky Shrub with a header image, welcome message, WELCOME25 coupon code, and View deals, Call us, and Unsubscribe buttons" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>营销模板</span><span>21_marketing_templates_overview.png</span>
+        </div>
+        <p>WhatsApp marketing template from Lucky Shrub with a header image, welcome message, WELCOME25 coupon code, and View deals, Call us, and Unsubscribe buttons</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="营销模板">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/22_marketing_templates_overview.png" data-caption="WhatsApp catalog template from Green Valley with labeled product thumbnail, body text, and a View catalog button"><img class="gallery-img" src="meta-whatsapp-template-assets/22_marketing_templates_overview.png" alt="WhatsApp catalog template from Green Valley with labeled product thumbnail, body text, and a View catalog button" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>营销模板</span><span>22_marketing_templates_overview.png</span>
+        </div>
+        <p>WhatsApp catalog template from Green Valley with labeled product thumbnail, body text, and a View catalog button</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="营销模板">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/23_marketing_templates_overview.png" data-caption="WhatsApp coupon code template from Markt offering code WHYNOT for 30% off, with Copy code and Start shopping buttons and a Code copied confirmation"><img class="gallery-img" src="meta-whatsapp-template-assets/23_marketing_templates_overview.png" alt="WhatsApp coupon code template from Markt offering code WHYNOT for 30% off, with Copy code and Start shopping buttons and a Code copied confirmation" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>营销模板</span><span>23_marketing_templates_overview.png</span>
+        </div>
+        <p>WhatsApp coupon code template from Markt offering code WHYNOT for 30% off, with Copy code and Start shopping buttons and a Code copied confirmation</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="营销模板">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/24_marketing_templates_overview.webp" data-caption="WhatsApp call permission request template asking Can LuckyShrubs call you? with a Choose preference dropdown"><img class="gallery-img" src="meta-whatsapp-template-assets/24_marketing_templates_overview.webp" alt="WhatsApp call permission request template asking Can LuckyShrubs call you? with a Choose preference dropdown" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>营销模板</span><span>24_marketing_templates_overview.webp</span>
+        </div>
+        <p>WhatsApp call permission request template asking Can LuckyShrubs call you? with a Choose preference dropdown</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="营销模板">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/25_marketing_templates_overview.png" data-caption="WhatsApp Offers and announcements setting modal for Lalueur with Interested and Not interested feedback options"><img class="gallery-img" src="meta-whatsapp-template-assets/25_marketing_templates_overview.png" alt="WhatsApp Offers and announcements setting modal for Lalueur with Interested and Not interested feedback options" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>营销模板</span><span>25_marketing_templates_overview.png</span>
+        </div>
+        <p>WhatsApp Offers and announcements setting modal for Lalueur with Interested and Not interested feedback options</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="营销模板">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/26_marketing_templates_overview.png" data-caption="WhatsApp Feedback submitted modal for Lalueur with options to stop offers and announcements or block the business"><img class="gallery-img" src="meta-whatsapp-template-assets/26_marketing_templates_overview.png" alt="WhatsApp Feedback submitted modal for Lalueur with options to stop offers and announcements or block the business" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>营销模板</span><span>26_marketing_templates_overview.png</span>
+        </div>
+        <p>WhatsApp Feedback submitted modal for Lalueur with options to stop offers and announcements or block the business</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="优惠">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/27_coupon_templates.png" data-caption="A coupon code template message in WhatsApp with annotations showing the body text, coupon_code, and discount parameters, copy code button, and quick reply button"><img class="gallery-img" src="meta-whatsapp-template-assets/27_coupon_templates.png" alt="A coupon code template message in WhatsApp with annotations showing the body text, coupon_code, and discount parameters, copy code button, and quick reply button" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>优惠</span><span>27_coupon_templates.png</span>
+        </div>
+        <p>A coupon code template message in WhatsApp with annotations showing the body text, coupon_code, and discount parameters, copy code button, and quick reply button</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/coupon-templates/?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article>
+      <article class="gallery-card" data-kind="营销模板">
+        <button class="image-button" data-full="meta-whatsapp-template-assets/28_custom_marketing_templates.png" data-caption="Custom marketing template preview with labeled image header, body, footer, URL, phone number, and quick-reply buttons"><img class="gallery-img" src="meta-whatsapp-template-assets/28_custom_marketing_templates.png" alt="Custom marketing template preview with labeled image header, body, footer, URL, phone number, and quick-reply buttons" loading="lazy"></button>
+        <div class="gallery-meta">
+          <span>营销模板</span><span>28_custom_marketing_templates.png</span>
+        </div>
+        <p>Custom marketing template preview with labeled image header, body, footer, URL, phone number, and quick-reply buttons</p>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/custom-marketing-templates/?locale=en_US" target="_blank" rel="noreferrer">查看官方来源</a>
+      </article></div>
+      </section>
+
+      <section class="section" id="sources">
+        <div class="section-head"><div><h2>Meta 官方链接</h2><p class="section-desc">所有功能边界和示例均来自 Meta 官方文档。页面打开后如遇地区或登录限制，可在 Meta Developers 站内搜索同名标题。</p></div></div>
+        <ol class="source-list"><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/overview" target="_blank" rel="noreferrer">Template overview</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/components" target="_blank" rel="noreferrer">Template components</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/template-media" target="_blank" rel="noreferrer">Template media</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/marketing-messages/overview/" target="_blank" rel="noreferrer">Marketing messages overview</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/" target="_blank" rel="noreferrer">Marketing Templates overview</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/media-card-carousel-templates/" target="_blank" rel="noreferrer">Media Card Carousel Templates</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/messages/interactive-media-carousel-messages/" target="_blank" rel="noreferrer">Interactive Media Carousel Messages</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/product-card-carousel-template-messages" target="_blank" rel="noreferrer">Product Card Carousel Templates</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/spm-template-messages" target="_blank" rel="noreferrer">Single-Product Message Templates</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/mpm-template-messages" target="_blank" rel="noreferrer">Multi-Product Message Templates</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/limited-time-offer-templates" target="_blank" rel="noreferrer">Limited-Time Offer Templates</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/coupon-templates/" target="_blank" rel="noreferrer">Coupon Templates</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/custom-marketing-templates/" target="_blank" rel="noreferrer">Custom Marketing Templates</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/location-templates/" target="_blank" rel="noreferrer">Location Templates</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/call-permission-request-message-template/" target="_blank" rel="noreferrer">Call Permission Request Message Template</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/flows" target="_blank" rel="noreferrer">WhatsApp Flows overview</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/flows/guides/sendingaflow" target="_blank" rel="noreferrer">Sending a Flow</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/flows/guides/flows-templates/" target="_blank" rel="noreferrer">Sending a Flow as template</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/flows/guides/examples/" target="_blank" rel="noreferrer">WhatsApp Flows Examples</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/catalogs/catalogs-overview" target="_blank" rel="noreferrer">Catalog overview</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/reference/whatsapp-business-account/message-template-api" target="_blank" rel="noreferrer">Message Templates API reference</a></li><li><a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/reference/whatsapp-business-phone-number/message-api" target="_blank" rel="noreferrer">Messages API reference</a></li></ol>
+      </section>
+    </main>
+
+    <footer class="footer">本 HTML 由研究稿与 Meta 官方示例图组合生成；图片随页面打包，打开即可查看。</footer>
+  </div>
+
+  <div class="modal" id="imageModal" aria-hidden="true">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-label="图片预览">
+      <div class="modal-head"><strong>图片预览</strong><button class="modal-close" type="button">关闭</button></div>
+      <img id="modalImage" src="" alt="">
+      <div class="modal-caption" id="modalCaption"></div>
+    </div>
+  </div>
+
+  <script>
+    const editPage = document.getElementById('editorContent');
+    const editToggle = document.getElementById('editToggle'); const editNote = document.getElementById('editNote'); const undoEdit = document.getElementById('undoEdit'); const saveEdit = document.getElementById('saveEdit');
+    const insertImage = document.getElementById('insertImage'); const insertTable = document.getElementById('insertTable'); const addSection = document.getElementById('addSection');
+    const addHeading = document.getElementById('addHeading'); const headingLevel = document.getElementById('headingLevel'); const headingLabel = document.getElementById('headingLabel');
+    const addBullet = document.getElementById('addBullet'); const addNumbered = document.getElementById('addNumbered'); const addBlock = document.getElementById('addBlock'); const blockType = document.getElementById('blockType'); const blockLabel = document.getElementById('blockLabel');
+    const boldText = document.getElementById('boldText'); const fontSize = document.getElementById('fontSize'); const fontColor = document.getElementById('fontColor'); const fontSizeLabel = document.getElementById('fontSizeLabel'); const fontColorLabel = document.getElementById('fontColorLabel');
+    const addSpan = document.getElementById('addSpan'); const spanType = document.getElementById('spanType'); const spanLabel = document.getElementById('spanLabel'); const imagePicker = document.getElementById('imagePicker');
+    let editSelection = null; let editHistory = []; let snapshotTimer = null; const savedPlaybookKey = `whatsapp-template-playbook:${window.location.pathname}`;
+    const editControls = [insertImage, insertTable, addSection, addHeading, addBullet, addNumbered, addBlock, boldText, addSpan];
+    function rememberEditSelection(){ const s=window.getSelection(); if(s.rangeCount && editPage.contains(s.anchorNode)) editSelection=s.getRangeAt(0).cloneRange(); }
+    function restoreEditSelection(){ editPage.focus({preventScroll:true}); if(!editSelection)return; const s=window.getSelection(); s.removeAllRanges(); s.addRange(editSelection); }
+    function updateUndo(){ undoEdit.disabled=editPage.contentEditable!=='true'||editHistory.length<2; }
+    function savePlaybook(){try{window.localStorage.setItem(savedPlaybookKey,editPage.innerHTML);editNote.textContent='已保存到此浏览器 · 刷新页面后会自动恢复';}catch(error){editNote.textContent='保存失败：浏览器没有提供本地存储空间';}}
+    function saveSnapshot(){ window.clearTimeout(snapshotTimer); const state=editPage.innerHTML; if(editHistory[editHistory.length-1]!==state){editHistory.push(state);if(editHistory.length>50)editHistory.shift();} updateUndo(); }
+    function queueSnapshot(){ window.clearTimeout(snapshotTimer); snapshotTimer=window.setTimeout(saveSnapshot,0); }
+    function selectedElement(){ if(!editSelection)return null; const n=editSelection.commonAncestorContainer; return n.nodeType===Node.ELEMENT_NODE?n:n.parentElement; }
+    function insertNode(node){ restoreEditSelection(); const s=window.getSelection(); const r=s.rangeCount?s.getRangeAt(0):null; if(!r){editPage.appendChild(node);queueSnapshot();return;} r.deleteContents();r.insertNode(node);r.setStartAfter(node);r.collapse(true);s.removeAllRanges();s.addRange(r);rememberEditSelection();queueSnapshot(); }
+    function insertAfterCurrentBlock(node){ const element=selectedElement(); const section=element&&element.closest('.section'); if(section)section.after(node);else editPage.querySelector('.footer').before(node); const target=node.querySelector('h1,h2,h3,h4,li,p')||node; const r=document.createRange();r.selectNodeContents(target);r.collapse(true);const s=window.getSelection();s.removeAllRanges();s.addRange(r);rememberEditSelection();queueSnapshot(); }
+    function applyTextStyle(style){ restoreEditSelection();const s=window.getSelection();if(!s.rangeCount||s.getRangeAt(0).collapsed)return;const r=s.getRangeAt(0);const span=document.createElement('span');Object.assign(span.style,style);try{r.surroundContents(span);}catch(error){const f=r.extractContents();span.appendChild(f);r.insertNode(span);}s.removeAllRanges();const nr=document.createRange();nr.selectNodeContents(span);s.addRange(nr);rememberEditSelection();queueSnapshot(); }
+    editToggle.addEventListener('click',()=>{const editing=editPage.contentEditable==='true';editPage.contentEditable=String(!editing);editPage.classList.toggle('is-editing',!editing);editToggle.textContent=editing?'编辑页面':'完成编辑';editNote.textContent=editing?'阅读模式 · 点击“编辑页面”后可修改内容':'编辑模式 · 可编辑文字、区块、标题、Span、图片与表格';editControls.forEach(c=>c.disabled=editing);saveEdit.disabled=editing;[headingLabel,blockLabel,fontSizeLabel,fontColorLabel,spanLabel].forEach(l=>l.hidden=editing);if(!editing)editHistory=[editPage.innerHTML];updateUndo();if(!editing)editPage.focus({preventScroll:true});});
+    editPage.addEventListener('keyup',rememberEditSelection);editPage.addEventListener('mouseup',rememberEditSelection);editPage.addEventListener('input',queueSnapshot);
+    undoEdit.addEventListener('click',()=>{const x=window.scrollX,y=window.scrollY;saveSnapshot();if(editHistory.length<2)return;editHistory.pop();editPage.innerHTML=editHistory[editHistory.length-1];updateUndo();editPage.focus({preventScroll:true});window.requestAnimationFrame(()=>window.scrollTo(x,y));});
+    saveEdit.addEventListener('click',savePlaybook);
+    insertImage.addEventListener('click',()=>imagePicker.click()); imagePicker.addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{const image=document.createElement('img');image.src=reader.result;image.alt=file.name;image.className='user-image';insertNode(image);};reader.readAsDataURL(file);e.target.value='';});
+    insertTable.addEventListener('click',()=>{const rows=Math.max(1,Math.min(10,Number(window.prompt('表格行数（1–10）','3'))||3));const cols=Math.max(1,Math.min(8,Number(window.prompt('表格列数（1–8）','3'))||3));const table=document.createElement('table');table.className='inserted-table';const body=document.createElement('tbody');for(let r=0;r<rows;r+=1){const row=document.createElement('tr');for(let c=0;c<cols;c+=1){const cell=document.createElement('td');cell.textContent=r===0?`标题 ${c+1}`:'填写内容';row.appendChild(cell);}body.appendChild(row);}table.appendChild(body);insertNode(table);});
+    addSection.addEventListener('click',()=>{const section=document.createElement('section');section.className='section';section.innerHTML='<div class="section-head"><div><h2>新增 Section 标题</h2><p class="section-desc">点击填写本节说明。</p></div></div>';insertAfterCurrentBlock(section);});
+    addHeading.addEventListener('click',()=>{const heading=document.createElement(headingLevel.value);heading.textContent=`新增 ${headingLevel.value.toUpperCase()} 标题`;insertAfterCurrentBlock(heading);});
+    function addListItem(type){const element=selectedElement();const list=element&&element.closest(type);if(list){const item=document.createElement('li');item.textContent='新增列表项';const current=element.closest('li');if(current)current.after(item);else list.appendChild(item);const r=document.createRange();r.selectNodeContents(item);r.collapse(true);const s=window.getSelection();s.removeAllRanges();s.addRange(r);rememberEditSelection();queueSnapshot();}else{const list=document.createElement(type);if(type==='ul')list.className='editor-list';list.innerHTML='<li>新增列表项</li>';insertAfterCurrentBlock(list);}}
+    addBullet.addEventListener('click',()=>addListItem('ul'));addNumbered.addEventListener('click',()=>addListItem('ol'));
+    addBlock.addEventListener('click',()=>{const block=document.createElement('div');const type=blockType.value;if(type==='card'){block.className='editor-card';block.innerHTML='<h3>信息卡标题</h3><p>点击填写说明或补充信息。</p>';}if(type==='callout'){block.className='editor-callout';block.innerHTML='<strong>重点提示：</strong> 点击填写需要强调的内容。';}if(type==='columns'){block.className='editor-columns';block.innerHTML='<div class="editor-card"><h3>左栏标题</h3><p>填写左栏内容。</p></div><div class="editor-card"><h3>右栏标题</h3><p>填写右栏内容。</p></div>';}if(type==='quote'){block.className='editor-quote';block.innerHTML='<strong>引用 / 备注：</strong> 点击填写备注、结论或原话。';}insertAfterCurrentBlock(block);});
+    boldText.addEventListener('click',()=>{restoreEditSelection();document.execCommand('bold',false);rememberEditSelection();queueSnapshot();});fontSize.addEventListener('change',()=>applyTextStyle({fontSize:fontSize.value}));fontColor.addEventListener('change',()=>applyTextStyle({color:fontColor.value}));
+    addSpan.addEventListener('click',()=>{restoreEditSelection();const s=window.getSelection();const r=s.rangeCount?s.getRangeAt(0):null;if(!r)return;const span=document.createElement('span');const type=spanType.value;const text={emphasis:'强调文本',label:'标签',green:'绿色强调',orange:'橙色强调',red:'红色强调',purple:'紫色强调',highlight:'高亮文本',note:'补充说明'}[type];if(type==='emphasis')span.style.fontWeight='750';if(type==='label')span.className='editor-span-label';if(type==='green')span.className='editor-span-green';if(type==='orange')span.className='editor-span-orange';if(type==='red')span.className='editor-span-red';if(type==='purple')span.className='editor-span-purple';if(type==='highlight')span.className='editor-span-highlight';if(type==='note')span.className='editor-span-note';if(r.collapsed){span.textContent=text;insertNode(span);}else{try{r.surroundContents(span);}catch(error){const f=r.extractContents();span.appendChild(f);r.insertNode(span);}s.removeAllRanges();const nr=document.createRange();nr.selectNodeContents(span);s.addRange(nr);rememberEditSelection();queueSnapshot();}});
+    try{const savedPlaybook=window.localStorage.getItem(savedPlaybookKey);if(savedPlaybook)editPage.innerHTML=savedPlaybook;}catch(error){/* local storage unavailable */}
+
+    const driveImages = {
+      '01_components.png':'16h_HYpKax2cHs_brbfg9l4SHfeZ-h8T0', '02_product_card_carousel.png':'1L6F3qKO4sFPCnpd3i3aRT_wOu1IZVc4C',
+      '03_product_card_carousel.png':'1MmXrBA87zk2U2w2J7IS7kNw76EFnB_XN', '04_product_card_carousel.png':'1ZzVXDrNb1VOh-XPIxU08ZRpqvLCjC9DL',
+      '05_product_card_carousel.png':'1VVxw18H06c62fRpV6N3B1T3GxPf_wstp', '06_product_card_carousel.png':'104flhROVV5ogyFtq4MJ6akapBQGbzEZ_',
+      '07_product_card_carousel.png':'1iILR7K1OJlFQ6lVX9yTLIizbTkNr90Dp', '08_limited_time_offer.png':'1GCe-NlCRwXiObZOGit6PqYUUWl0lIYnl',
+      '09_limited_time_offer.png':'1AHQBFVzahEH5CfytCpCe7MLo1NexAvel', '10_media_card_carousel.png':'1C5gpijBnKf08-f5Lo88gdIsJhwTmkqtZ',
+      '11_media_card_carousel.png':'1sXp5W5shyUcIFKIejS9SVCHVRx6WpOiC', '12_single_product_message.png':'1PjLbEz8_9cP7sa273sWXHCaEWZ83Rl24',
+      '13_single_product_message.png':'1dq3quDL5u8v1nf9yf3ZCOYBO-6BvQZ2Z', '14_single_product_message.png':'1cIb7eTFQXNZdI8zjz0Z9EWuTngsfmaDF',
+      '15_single_product_message.png':'1M9G_juuuobVBq8JlMQsAtt1yZ5PeCAfn', '16_multi_product_message.png':'1NxQlbVFwnMkxaU7S8vHy-Nr7Go5bCEYp',
+      '17_multi_product_message.png':'1iU08BdGfhJ2y5ivpT5UrAeL9w9HANE6l', '18_multi_product_message.png':'1O8ZAzKar4MCPQmqZmP-lJd3_9k2ic4pf',
+      '19_interactive_media_carousel.png':'1pTBbXXUxIpPXWj7lKzTabPb1YkStCOI4', '20_interactive_media_carousel.png':'1U3bfO9f3Re0q3kvSLURoju4mX0xlr89I',
+      '21_marketing_templates_overview.png':'1ZtlJtFaRNOO2IZNp4I2kBFit-7GvpVQI', '22_marketing_templates_overview.png':'1jCi7Y9z1jFBk9n4fjrgwP6DpXk0tOZOE',
+      '23_marketing_templates_overview.png':'1aIXtNsoFHgIu0I_ZSLkRxZ47jjL4hU_V', '24_marketing_templates_overview.webp':'1oW-x_SrR4-boHERj6TnD16DXTfaJgPgr',
+      '25_marketing_templates_overview.png':'11glFhcOg6IcWRV-QNc9es-68EiCOmFAP', '26_marketing_templates_overview.png':'18PBv1bK_uYb7sjE71zvHRBjajyr0ONtB',
+      '27_coupon_templates.png':'1Pp-cgpmf-Vqqau-BNTh1vhYpc1SGeuyO', '28_custom_marketing_templates.png':'13PPZf00srilVRIQdQ9T-KGhSU8bV3AHp'
+    };
+    const toDriveImage = (value) => value;
+    document.querySelectorAll('img[src]').forEach((image) => { image.src = toDriveImage(image.getAttribute('src')); });
+    document.querySelectorAll('[data-full]').forEach((button) => { button.dataset.full = toDriveImage(button.dataset.full); });
+
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalCaption = document.getElementById('modalCaption');
+    document.querySelectorAll('.image-button').forEach((button) => {
+      button.addEventListener('click', () => {
+        modalImage.src = button.dataset.full;
+        modalImage.alt = button.dataset.caption || '';
+        modalCaption.textContent = button.dataset.caption || '';
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+      });
+    });
+    function closeModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      modalImage.src = '';
+    }
+    document.querySelector('.modal-close').addEventListener('click', closeModal);
+    modal.addEventListener('click', (event) => { if (event.target === modal) closeModal(); });
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeModal(); });
+
+    const filters = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.gallery-card');
+    filters.forEach((button) => {
+      button.addEventListener('click', () => {
+        filters.forEach((b) => b.classList.remove('active'));
+        button.classList.add('active');
+        const filter = button.dataset.filter;
+        cards.forEach((card) => {
+          const show = filter === 'all' || card.dataset.kind === filter;
+          card.style.display = show ? '' : 'none';
+        });
+      });
+    });
+  </script>
+</body>
+</html>
